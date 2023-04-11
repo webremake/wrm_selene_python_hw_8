@@ -19,17 +19,29 @@ class TestProducts:
 
     def test_product_check_quantity(self, product):
         # TODO напишите проверки на метод check_quantity
-        pass
+
+        """
+        Тест на проверку того, что метод check_quantity возвращает True при передаче значения quantity,
+        которое меньше или равно quantity объекта Product, и False в обратном случае.
+        """
+        assert product.check_quantity(product.quantity - 1) is True
+        assert product.check_quantity(product.quantity) is True
+        assert product.check_quantity(product.quantity + 1) is False
 
     def test_product_buy(self, product):
         # TODO напишите проверки на метод buy
-        pass
+        """
+        Тест на проверку того, что метод buy уменьшает количество товара на складе на переданное значение quantity
+         в случае, если это количество товара есть на складе,
+        """
+        product.buy(product.quantity - 1)
+        assert product.quantity == 1
 
     def test_product_buy_more_than_available(self, product):
         # TODO напишите проверки на метод buy,
         #  которые ожидают ошибку ValueError при попытке купить больше, чем есть в наличии
-        pass
-
+        with pytest.raises(ValueError):
+            product.buy(product.quantity + 1)
 
 class TestCart:
     """
