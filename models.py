@@ -29,11 +29,8 @@ class Product:
         if self.check_quantity(quantity) is True:
             self.quantity -= quantity
         else:
-            try:
-                raise ValueError\
-                    (f'Товара {product.name} недостаточно на складе. Не хватает {self.quantity - quantity} шт.')
-            except ValueError as e:
-                print(e)
+            raise ValueError \
+                (f'Товара {self.name} недостаточно на складе. Не хватает {self.quantity - quantity} шт.')
 
     def __hash__(self):
         return hash(self.name + self.description)
@@ -81,7 +78,8 @@ class Cart:
         """
         raise NotImplementedError
 
+
 if __name__ == "__main__":
     product = Product("book", 100, "This is a book", 1000)
-    product.buy(0)
+    product.buy(1001)
     print()
