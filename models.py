@@ -38,7 +38,6 @@ class Product:
 class Cart:
     """
     Класс корзины. В нем хранятся продукты, которые пользователь хочет купить.
-    TODO реализуйте все методы класса
     """
 
     # Словарь продуктов и их количество в корзине
@@ -58,20 +57,24 @@ class Cart:
         else:
             self.products[product] = quantity
 
-
     def remove_product(self, product: Product, quantity=None):
         """
         Метод удаления продукта из корзины.
         Если quantity не передан, то удаляется вся позиция
         Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
-        raise NotImplementedError
+        if product in self.products \
+                and (quantity is None or quantity > self.products[product]):
+            del self.products[product]
 
     def clear(self):
-        raise NotImplementedError
+        self.products.clear()
 
     def get_total_price(self) -> float:
-        raise NotImplementedError
+        total_price = 0.00
+        for product in self.products:
+            total_price += self.products[product] * product.price
+        return total_price
 
     def buy(self):
         """
@@ -79,28 +82,45 @@ class Cart:
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-        raise NotImplementedError
+
+        # для каждого товара в корзине применяем метод Product.buy
+        # если ни для одного товара метод не выбросил исключение возвращаем True и очишаем корзину
+        for product in self.products:
+            try:
+                product.buy(self.products[product])
+            except:
+                print(f'Товара {product.name} недостаточно на складе.\n'
+                      f'Остаток товара на складе {product.quantity} шт.\n'
+                      f'Вы можете удалить товар из корзины командой remove_product({product.name}),\n'
+                      f'Или изменить количество товара в корзине change_product_quantity({product.quantity})'
+                      )
+        return self.get_total_price()
+    
 
 
 if __name__ == "__main__":
-    book = Product("book", 100, "This is a book", 1000)
-    newspaper = Product("newspaper", 20, "This is a newspaper", 5000)
-    jornal = Product("jornal", 50, "This is a jornal", 2000)
+    book = Product("book", 99.99, "This is a book", 1000)
+    newspaper = Product("newspaper", 19.95, "This is a newspaper", 5000)
+    jornal = Product("jornal", 49.81, "This is a jornal", 2000)
     cart = Cart()
     cart.add_product(book, 5)
-    print(cart.products)
     cart.add_product(book, 5)
-    print(cart.products)
     cart.add_product(newspaper, 10)
-    print(cart.products)
-    cart.add_product(newspaper, 5)
-    print(cart.products)
+    cart.add_product(newspaper, 5000)
+    # cart.remove_product(book)
+    # cart.remove_product(newspaper, 550)
+    cart.get_total_price()
+    print(cart.get_total_price())
+    cart.buy()
+    cart.remove_product(newspaper)
 
 
-
+    # cart.clear()
 
     # book.buy(100)
 
-
     print()
 
+    cart.buy()
+    cart.get_total_price()
+    print(cart.get_total_price())
