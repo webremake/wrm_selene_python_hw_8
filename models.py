@@ -91,7 +91,7 @@ class Cart:
             #     product.buy(self.products[product])
             # except ValueError:
             #     raise ValueError('Товара недостаточно на складе')
-        return self.get_total_price()
+        cart.clear()
 
 if __name__ == "__main__":
     product = Product("book", 100, "This is a book", 1000)
