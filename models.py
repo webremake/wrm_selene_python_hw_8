@@ -59,12 +59,16 @@ class Cart:
     def remove_product(self, product: Product, quantity=None):
         """
         Метод удаления продукта из корзины.
-        Если quantity не передан, то удаляется вся позиция
-        Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
+         - Если quantity не передан, то удаляется вся позиция
+         - Если quantity меньше, чем количество продуктов в позиции - уменьшаем количество продуктов
+         в позиции на переданную величину quantity.
+         - Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
         if product in self.products \
-                and (quantity is None or quantity > self.products[product]):
+                and (quantity is None or quantity >= self.products[product]):
             del self.products[product]
+        else:
+            self.products[product] -= quantity
 
     def clear(self):
         self.products.clear()
@@ -87,3 +91,10 @@ class Cart:
             except ValueError:
                 raise ValueError('Товара недостаточно на складе')
         return self.get_total_price()
+
+if __name__ == "__main__":
+    product = Product("book", 100, "This is a book", 1000)
+    product.buy(10)
+    cart = Cart()
+    cart.add_product(product)
+    print(cart.get_total_price())
