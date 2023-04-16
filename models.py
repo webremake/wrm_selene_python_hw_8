@@ -28,7 +28,7 @@ class Product:
         if self.check_quantity(quantity) is True:
             self.quantity -= quantity
         else:
-            raise ValueError(f'Товара {self.name} недостаточно на складе. Не хватает {self.quantity - quantity} шт.')
+            raise ValueError('Товара недостаточно на складе')
 
     def __hash__(self):
         return hash(self.name + self.description)
@@ -86,10 +86,11 @@ class Cart:
         В этом случае нужно выбросить исключение ValueError
         """
         for product in self.products:
-            try:
-                product.buy(self.products[product])
-            except ValueError:
-                raise ValueError('Товара недостаточно на складе')
+            product.buy(self.products[product])
+            # try:
+            #     product.buy(self.products[product])
+            # except ValueError:
+            #     raise ValueError('Товара недостаточно на складе')
         return self.get_total_price()
 
 if __name__ == "__main__":
