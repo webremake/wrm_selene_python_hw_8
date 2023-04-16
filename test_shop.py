@@ -90,6 +90,18 @@ class TestCart:
         cart.remove_product(product, product.quantity + 1)
         assert cart.products == {}
 
+    def test_remove_product_from_cart_with_quantity_less_than_cart_product_quantity(self, cart, product):
+        cart.add_product(product, product.quantity)
+        cart.remove_product(product, cart.products[product] - 1)
+        assert cart.products[product] == 1
+
+    def test_remove_product_from_cart_with_quantity_equal_cart_product_quantity(self, cart, product):
+        cart.add_product(product, product.quantity)
+        cart.remove_product(product, cart.products[product])
+        assert cart.products.get(product) is None
+
+
+
     def test_clear_cart_not_empty(self, cart, product):
         cart.add_product(product)
         cart.clear()
