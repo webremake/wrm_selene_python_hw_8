@@ -28,7 +28,7 @@ class Product:
         if self.check_quantity(quantity) is True:
             self.quantity -= quantity
         else:
-            raise ValueError(f'Товара {self.name} недостаточно на складе. Не хватает {self.quantity - quantity} шт.')
+            raise ValueError('Товара недостаточно на складе')
 
     def __hash__(self):
         return hash(self.name + self.description)
@@ -59,12 +59,16 @@ class Cart:
     def remove_product(self, product: Product, quantity=None):
         """
         Метод удаления продукта из корзины.
-        Если quantity не передан, то удаляется вся позиция
-        Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
+         - Если quantity не передан, то удаляется вся позиция
+         - Если quantity меньше, чем количество продуктов в позиции - уменьшаем количество продуктов
+         в позиции на переданную величину quantity.
+         - Если quantity больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
         if product in self.products \
-                and (quantity is None or quantity > self.products[product]):
+                and (quantity is None or quantity >= self.products[product]):
             del self.products[product]
+        else:
+            self.products[product] -= quantity
 
     def clear(self):
         self.products.clear()
@@ -82,8 +86,9 @@ class Cart:
         В этом случае нужно выбросить исключение ValueError
         """
         for product in self.products:
-            try:
-                product.buy(self.products[product])
-            except ValueError:
-                raise ValueError('Товара недостаточно на складе')
-        return self.get_total_price()
+            product.buy(self.products[product])
+            # try:
+            #     product.buy(self.products[product])
+            # except ValueError:
+            #     raise ValueError('Товара недостаточно на складе')
+        self.clear()
